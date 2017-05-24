@@ -6,11 +6,11 @@ using System.ComponentModel;
 
 namespace FanpageTool.ViewModel
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel :INotifyPropertyChanged
     {
-        private string m_commandText;
+        private StringBuilder m_commandText = new StringBuilder();
 
-        public string CommandText 
+        public StringBuilder CommandText 
         {
             get
             {

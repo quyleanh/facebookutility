@@ -4,21 +4,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         Width="650"
-        Height="250"
+        Height="300"
         ResizeMode="NoResize"
         Title="FanpageTool">
-    <Grid Background="White">
+   
+    <Grid Background="White"
+          HorizontalAlignment="Center">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="3*" />
             <RowDefinition Height="4*" />
         </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0" x:Name="scrollViewer" 
+                      VerticalAlignment="Center"
+                      Height="88"
+                      Margin="10,20,10,0"
+                      HorizontalScrollBarVisibility="Hidden" 
+                      VerticalScrollBarVisibility="Hidden">
+            <TextBlock Text="{Binding CommandText}"
+                       VerticalAlignment="Center"
+                       FontFamily="Arial"
+                       FontSize="13"
+                       HorizontalAlignment="Left"
+                       x:Name="CommandTextBlock"/>
+        </ScrollViewer>
         
-        <TextBlock Grid.Row="0"
-                   Text="{Binding CommandText}"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
-                   Margin="20,0"
-                   x:Name="CommandTextBlock"/>
         
         <StackPanel Orientation="Vertical"
                     Grid.Row="1"
@@ -49,14 +58,14 @@
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter Property="Panel.ZIndex" Value="100" />
-                                            <Setter TargetName="Border" Property="Background" Value="#305030" />
+                                            <Setter TargetName="Border" Property="Background" Value="#DFDFDF" />
                                             <Setter TargetName="Border" Property="BorderThickness" Value="1" />
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="False">
                                             <Setter Property="Foreground" Value="#A5A5A5" />
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Border" Property="Background" Value="#305030" />
+                                            <Setter TargetName="Border" Property="Background" Value="#DFDFDF" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -82,7 +91,7 @@
                                                 Name="Border" 
                                                 Background="White"
                                                 Grid.Column="1"
-                                                BorderBrush="Black"
+                                                BorderBrush="#BFBFBF"
                                                 BorderThickness="1">
                                             <ContentPresenter ContentSource="SelectedContent" />
                                         </Border>

@@ -18,7 +18,8 @@ using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
 using IronPython.Hosting;
-
+using System.Threading.Tasks;
+using FanpageTool.ViewModel;
 namespace FanpageTool
 {
     /// <summary>
@@ -30,6 +31,7 @@ namespace FanpageTool
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new MainWindowViewModel();
         }
 
         #region Get Post
@@ -43,24 +45,67 @@ namespace FanpageTool
 
         private void RunGetPostCommand()
         {
-            editedScriptFile = "../facebook/print.py";
+            #region Old Sample code
+            //editedScriptFile = "../facebook/print.py";
 
-            string pyScript = "\"" + ParentDirectory() + @"\facebook\print.py" + "\"";
-            string pyExecute = "\"" + ParentDirectory() + @"\python\python.exe" + "\"";
+            //string pyScript = "\"" + ParentDirectory() + @"\facebook\print.py" + "\"";
+            //string pyExecute = "\"" + ParentDirectory() + @"\python\python.exe" + "\"";
 
-            System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
-            pProcess.StartInfo.FileName = pyExecute + " " + pyScript;
+            //System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+            //pProcess.StartInfo.FileName = pyExecute + " " + pyScript;
 
-            pProcess.StartInfo.UseShellExecute = false;
-            pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            pProcess.StartInfo.RedirectStandardOutput = true;
-            pProcess.StartInfo.WorkingDirectory = ParentDirectory();
+            //pProcess.StartInfo.UseShellExecute = false;
+            //pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            //pProcess.StartInfo.RedirectStandardOutput = true;
+            //pProcess.StartInfo.WorkingDirectory = ParentDirectory();
 
-            pProcess.Start();
-            string strOutput = pProcess.StandardOutput.ReadToEnd();
-            Console.WriteLine(strOutput);
-            CommandTextBlock.Text = strOutput;
-            pProcess.WaitForExit();
+            //pProcess.Start();
+            //string strOutput = pProcess.StandardOutput.ReadToEnd();
+            //Console.WriteLine(strOutput);
+            //CommandTextBlock.Text = strOutput;
+            //pProcess.WaitForExit();
+            #endregion
+
+            Task task = new Task(() =>
+            {
+                string pyScript = "\"" + ParentDirectory() + @"\facebook\print.py" + "\"";
+                string pyExecute = "\"" + ParentDirectory() + @"\python\python.exe" + "\"";
+
+                Process process = new Process();
+                //System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                //startInfo.FileName = "cmd";
+                //startInfo.Arguments = "/c " + "ping training.tsdv.com.vn -n 10";
+                //process.StartInfo = startInfo;
+
+                process.StartInfo.FileName = pyExecute + " " + pyScript;
+
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.CreateNoWindow = true;
+                process.OutputDataReceived += DataReceivedEventHandler;
+                process.ErrorDataReceived += DataReceivedEventHandler;
+                process.EnableRaisingEvents = true;
+                process.StartInfo.UseShellExecute = false;
+                process.Start();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+                process.Close();
+            });
+            task.Start();
+        }
+
+        public void DataReceivedEventHandler(object sender, DataReceivedEventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
+                if (e.Data != null)
+                {
+                    vm.CommandText.Append(e.Data.ToString() + "\n");
+                    vm.OnPropertyChanged("CommandText");
+                    scrollViewer.ScrollToBottom();
+                }
+            }));
         }
 
         // Get Parent Directory
@@ -112,17 +157,11 @@ namespace FanpageTool
         #region Get Comment
         private void GetCommentBtn_Click(object sender, RoutedEventArgs e)
         {
-            string number = NumberPost.Text;
-
             string getPostPyScript = @"../facebook/py3.5_get_fb_comments_from_fb.py";
-            //string getPostPyScript = @"test.py";
-
             try
             {
                 ScriptEngine engine = Python.CreateEngine();
                 var paths = engine.GetSearchPaths();
-                //paths.Add("../Lib");
-                //engine.SetSearchPaths(paths);
                 engine.ImportModule("../Lib/urllib.request");
                 engine.ImportModule("../Lib/json");
                 engine.ImportModule("../Lib/datetime");
