@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         Width="650"
-        Height="300"
+        Height="350"
         ResizeMode="NoResize"
         Title="FanpageTool">
    
@@ -23,9 +23,24 @@
             <TextBlock Text="{Binding CommandText}"
                        VerticalAlignment="Center"
                        FontFamily="Arial"
-                       FontSize="13"
-                       HorizontalAlignment="Left"
-                       x:Name="CommandTextBlock"/>
+                       x:Name="CommandTextBlock">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="FontSize" Value="13" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsInit}" Value="False">
+                                <Setter Property="Foreground" Value="#FF595959"/>
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="FontSize" Value="24" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="Text" Value="Facebook Fanpage Tool" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
         </ScrollViewer>
         
         
@@ -102,7 +117,7 @@
                     </Style>
                 </TabControl.Resources>
                 <!--Tab Get Post-->
-                <TabItem Height="40" FlowDirection="LeftToRight">
+                <TabItem Height="50" FlowDirection="LeftToRight">
                     <TabItem.Header>
                         <TextBlock Text="Get Post"
                                    FontSize="16"/>
@@ -116,20 +131,70 @@
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
+                        <!--Lable Enter Page ID-->
+                        <TextBlock Margin="20,10,20,5" 
+                                   Text="Enter Page ID:"
+                                   FontSize="14"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   Grid.Column="0" Grid.Row="0"/>
+                        <!--TextBox Page ID-->
+                        <TextBox Height="30" Width="220"
+                                 VerticalAlignment="Bottom"
+                                 FontSize="14"
+                                 VerticalContentAlignment="Center"
+                                 HorizontalAlignment="Left"
+                                 Margin="20,10"
+                                 x:Name="NumberPost"
+                                 MaxLength="4"
+                                 Grid.Column="0" Grid.Row="0"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 DataObject.Pasting="NumberPost_Pasting">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="HogwartsVietnam" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                            <TextBox.ToolTip>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock FontWeight="Bold"
+                                        Text="Enter Page ID alias" />
+                                    <TextBlock Text="Link Fanpage Facebook without https://facebook.com/" />
+                                </StackPanel>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <!--Lable Enter Number of Post-->
-                        <TextBlock Margin="20,5" 
+                        <TextBlock Margin="20,10,20,5" 
                                    Text="Enter number of posts:"
                                    FontSize="14"
                                    HorizontalAlignment="Left"
-                                   VerticalAlignment="Bottom"
-                                   Grid.Column="0" Grid.Row="0"/>
+                                   VerticalAlignment="Top"
+                                   Grid.Column="0" Grid.Row="1"/>
                         <!--TextBox Number of Post-->
-                        <TextBox Height="30" Width="200"
-                                 VerticalAlignment="Top"
+                        <TextBox Height="30" Width="220"
+                                 VerticalAlignment="Bottom"
                                  FontSize="14"
+                                 VerticalContentAlignment="Center"
                                  HorizontalAlignment="Left"
-                                 Margin="20,5"
-                                 x:Name="NumberPost"
+                                 Margin="20,10"
+                                 x:Name="PageID"
                                  MaxLength="4"
                                  Grid.Column="0" Grid.Row="1"
                                  PreviewTextInput="NumberValidationTextBox"
@@ -139,7 +204,7 @@
                                     <Style.Resources>
                                         <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                             <VisualBrush.Visual>
-                                                <Label Content="Enter number" Foreground="LightGray" />
+                                                <Label Content="1000" Foreground="LightGray" />
                                             </VisualBrush.Visual>
                                         </VisualBrush>
                                     </Style.Resources>
@@ -165,6 +230,8 @@
                             </TextBox.ToolTip>
                         </TextBox>
                         <!--Button Get Post-->
+                        
+                        <!--Button Get Post-->
                         <Button Grid.Column="1" Grid.Row="1"
                                 Height="30" Width="80"
                                 Content="Get Post"
@@ -177,7 +244,7 @@
                     </Grid>
                 </TabItem>
                 <!--Tab Get Comment-->
-                <TabItem Height="40">
+                <TabItem Height="50">
                     <TabItem.Header>
                         <TextBlock Text="Get Comment"  
                                    FontSize="16"/>
@@ -191,27 +258,77 @@
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
-                        <!--Lable Enter Post ID-->
-                        <TextBlock Margin="20,5" 
-                                   Text="Enter Post_ID:"
+                        <!--Lable Enter Page ID-->
+                        <TextBlock Margin="20,10,20,5" 
+                                   Text="Enter Page ID:"
                                    FontSize="14"
-                                   Grid.Column="0" Grid.Row="0"
                                    HorizontalAlignment="Left"
-                                   VerticalAlignment="Bottom"/>
-                        <!--TextBox for Enter Post ID-->
-                        <TextBox Height="30" Width="200"
-                                 VerticalContentAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   Grid.Column="0" Grid.Row="0"/>
+                        <!--TextBox Page ID-->
+                        <TextBox Height="30" Width="220"
+                                 VerticalAlignment="Bottom"
                                  FontSize="14"
-                                 Grid.Column="0" Grid.Row="1"
-                                 VerticalAlignment="Top"
+                                 VerticalContentAlignment="Center"
                                  HorizontalAlignment="Left"
-                                 Margin="20,5">
+                                 Margin="20,10"
+                                 x:Name="NumberPostComment"
+                                 MaxLength="4"
+                                 Grid.Column="0" Grid.Row="0"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 DataObject.Pasting="NumberPost_Pasting">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                     <Style.Resources>
                                         <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                             <VisualBrush.Visual>
-                                                <Label Content="Enter Post ID" Foreground="LightGray" />
+                                                <Label Content="HogwartsVietnam" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                            <TextBox.ToolTip>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock FontWeight="Bold"
+                                        Text="Enter Page ID alias" />
+                                    <TextBlock Text="Link Fanpage Facebook without https://facebook.com/" />
+                                </StackPanel>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                        <!--Lable Enter Post ID-->
+                        <TextBlock Margin="20,10,20,5" 
+                                   Text="Enter Post_ID:"
+                                   FontSize="14"
+                                   Grid.Column="0" Grid.Row="1"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"/>
+                        <!--TextBox for Enter Post ID-->
+                        <TextBox Height="30" Width="220"
+                                 x:Name="PostIDTextBox"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"
+                                 Grid.Column="0" Grid.Row="1"
+                                 VerticalAlignment="Bottom"
+                                 HorizontalAlignment="Left"
+                                 Margin="20,10">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <TextBlock Text="167994586682731_762868747195309" Foreground="LightGray" />
                                             </VisualBrush.Visual>
                                         </VisualBrush>
                                     </Style.Resources>
@@ -251,7 +368,7 @@
                     </Grid>
                 </TabItem>
                 <!--Tab Filter Comment-->
-                <TabItem Height="40">
+                <TabItem Height="50">
                     <TabItem.Header>
                         <TextBlock Text="Filter Comment"
                                    FontSize="16"/>
@@ -265,22 +382,93 @@
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
+                        <!--Lable Enter Page ID-->
+                        <TextBlock Margin="20,10,20,5" 
+                                   Text="Enter Page ID:"
+                                   FontSize="14"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   Grid.Column="0" Grid.Row="0"/>
+                        <!--TextBox Page ID-->
+                        <TextBox Height="30" Width="220"
+                                 VerticalAlignment="Bottom"
+                                 FontSize="14"
+                                 VerticalContentAlignment="Center"
+                                 HorizontalAlignment="Left"
+                                 Margin="20,10"
+                                 x:Name="NumberPostCommentFilter"
+                                 MaxLength="4"
+                                 Grid.Column="0" Grid.Row="0"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 DataObject.Pasting="NumberPost_Pasting">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="HogwartsVietnam" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                            <TextBox.ToolTip>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock FontWeight="Bold"
+                                        Text="Enter Page ID alias" />
+                                    <TextBlock Text="Link Fanpage Facebook without https://facebook.com/" />
+                                </StackPanel>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <!--Lable for enter Number of Digit-->
-                        <TextBlock Margin="20,5" 
+                        <TextBlock Margin="20,10,20,5" 
                                    Text="Enter number of digit:"
                                    FontSize="14"
-                                   Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+                                   Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
                                    HorizontalAlignment="Left"
-                                   VerticalAlignment="Bottom"/>
+                                   VerticalAlignment="Top"/>
                         <!--TextBox for Enter Number of Digit-->
-                        <TextBox Height="30" Width="200"
+                        <TextBox Height="30" Width="220"
                                  VerticalContentAlignment="Center"
                                  FontSize="14"
                                  Grid.Column="0" Grid.Row="1"
-                                 VerticalAlignment="Top"
+                                 VerticalAlignment="Bottom"
                                  HorizontalAlignment="Left"
-                                 Margin="20,5"
+                                 Margin="20,10"
                                  x:Name="FilteredNumberTextbox">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="4" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
                             <TextBox.ToolTip>
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock FontWeight="Bold"

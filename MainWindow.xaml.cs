@@ -28,6 +28,12 @@ namespace FanpageTool
     public partial class MainWindow : Window
     {
         private string editedScriptFile = "../facebook/temp/get_fb_posts_fb_page.py";
+        private enum FILE_TYPE 
+        {
+            FILE_POST = 0,
+            FILE_COMMENT,
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,9 +43,11 @@ namespace FanpageTool
         #region Get Post
         private void GetPostBtn_Click(object sender, RoutedEventArgs e)
         {
+            MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
+            vm.IsInit = true;
+            vm.CommandText = new StringBuilder("");
             string number = NumberPost.Text;
-            //UpdatePyFile(number);
-
+            //UpdateGetPostPyFile(number);
             RunGetPostCommand();
         }
 
@@ -72,12 +80,12 @@ namespace FanpageTool
                 string pyExecute = "\"" + ParentDirectory() + @"\python\python.exe" + "\"";
 
                 Process process = new Process();
-                //System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                //startInfo.FileName = "cmd";
-                //startInfo.Arguments = "/c " + "ping training.tsdv.com.vn -n 10";
-                //process.StartInfo = startInfo;
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.FileName = "cmd";
+                startInfo.Arguments = "/c " + "ping training.tsdv.com.vn -n 10";
+                process.StartInfo = startInfo;
 
-                process.StartInfo.FileName = pyExecute + " " + pyScript;
+                //process.StartInfo.FileName = pyExecute + " " + pyScript;
 
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardInput = true;
@@ -102,6 +110,7 @@ namespace FanpageTool
                 if (e.Data != null)
                 {
                     vm.CommandText.Append(e.Data.ToString() + "\n");
+                    Console.WriteLine(e.Data.ToString());
                     vm.OnPropertyChanged("CommandText");
                     scrollViewer.ScrollToBottom();
                 }
@@ -129,49 +138,127 @@ namespace FanpageTool
         }
 
         // Update Python file to get number of post
-        private void UpdatePyFile(string number)
+        private void UpdateGetPostPyFile(string number)
         {
-            string filePath = "../facebook/py3.5_get_fb_posts_fb_page.py";
-            string text = File.ReadAllText(filePath);
+            #region Old Sample Code
+            //string filePath = "../facebook/py3.5_get_fb_posts_fb_page.py";
+            //string text = File.ReadAllText(filePath);
 
-            if (text != "" && text.Contains("number_gotten_page = "))
+            //if (text != "" && text.Contains("number_gotten_page = "))
+            //{
+            //    int index = text.IndexOf("number_gotten_page = ");
+            //    if (index >= 0)
+            //    {
+            //        int startIndexOfValue = index + "number_gotten_page = ".Length;
+            //        string textAfter = text.Substring(startIndexOfValue, text.Length - startIndexOfValue);
+            //        int indexN = textAfter.IndexOf(@"access_token = app_id");
+            //        textAfter = textAfter.Substring(indexN, textAfter.Length - indexN);
+
+            //        text = text.Substring(0, startIndexOfValue);
+            //        text += number;
+            //        text += "\n\n";
+            //        text += textAfter;
+            //    }
+            //}
+            //File.WriteAllText(editedScriptFile, text);
+            #endregion
+
+            int line_to_edit = 11; // Warning: 1-based indexing!
+            string destinationFile = "../facebook/py3.5_get_fb_posts_fb_page.py";
+
+            string lineToWrite = null;
+            if (number != null && number != "0")
             {
-                int index = text.IndexOf("number_gotten_page = ");
-                if (index >= 0)
-                {
-                    int startIndexOfValue = index + "number_gotten_page = ".Length;
-                    string textAfter = text.Substring(startIndexOfValue, text.Length - startIndexOfValue);
-                    int indexN = textAfter.IndexOf(@"access_token = app_id");
-                    textAfter = textAfter.Substring(indexN, textAfter.Length - indexN);
+                lineToWrite = "number_gotten_page = " + number;
+            }
+            else
+            {
+                lineToWrite = "number_gotten_page = 0";
+            }
 
-                    text = text.Substring(0, startIndexOfValue);
-                    text += number;
-                    text += "\n\n";
-                    text += textAfter;
+            // Read the old file.
+            string[] lines = File.ReadAllLines(destinationFile);
+
+            // Write the new file over the old file.
+            using (StreamWriter writer = new StreamWriter(destinationFile))
+            {
+                for (int currentLine = 1; currentLine <= lines.Length; ++currentLine)
+                {
+                    if (currentLine == line_to_edit)
+                    {
+                        writer.WriteLine(lineToWrite);
+                    }
+                    else
+                    {
+                        writer.WriteLine(lines[currentLine - 1]);
+                    }
                 }
             }
-            File.WriteAllText(editedScriptFile, text);
         }
         #endregion
+
+        private void UpdatePythonFile(string inputData, )
+        {
+
+        }
 
         #region Get Comment
         private void GetCommentBtn_Click(object sender, RoutedEventArgs e)
         {
-            string getPostPyScript = @"../facebook/py3.5_get_fb_comments_from_fb.py";
-            try
+            //string getPostPyScript = @"../facebook/py3.5_get_fb_comments_from_fb.py";
+            //try
+            //{
+            //    ScriptEngine engine = Python.CreateEngine();
+            //    var paths = engine.GetSearchPaths();
+            //    engine.ImportModule("../Lib/urllib.request");
+            //    engine.ImportModule("../Lib/json");
+            //    engine.ImportModule("../Lib/datetime");
+            //    engine.ImportModule("../Lib/csv");
+            //    engine.ImportModule("../Lib/time");
+            //    engine.ExecuteFile(getPostPyScript);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+
+            string postID = PostIDTextBox.Text;
+
+            UpdateGetCommentsPyFile(postID);
+        }
+
+        private void UpdateGetCommentsPyFile(string postID)
+        {
+            int line_to_edit = 106; // Warning: 1-based indexing!
+            string destinationFile = "../facebook/py3.5_get_fb_comments_from_fb.py";
+
+            string lineToWrite = null;
+            if (postID != null)
             {
-                ScriptEngine engine = Python.CreateEngine();
-                var paths = engine.GetSearchPaths();
-                engine.ImportModule("../Lib/urllib.request");
-                engine.ImportModule("../Lib/json");
-                engine.ImportModule("../Lib/datetime");
-                engine.ImportModule("../Lib/csv");
-                engine.ImportModule("../Lib/time");
-                engine.ExecuteFile(getPostPyScript);
+                lineToWrite = "reader = [dict(status_id='" + postID + "')]";
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.Message);
+                lineToWrite = "reader = csv.DictReader(csvfile)";
+            }
+
+            // Read the old file.
+            string[] lines = File.ReadAllLines(destinationFile);
+
+            // Write the new file over the old file.
+            using (StreamWriter writer = new StreamWriter(destinationFile))
+            {
+                for (int currentLine = 1; currentLine <= lines.Length; ++currentLine)
+                {
+                    if (currentLine == line_to_edit)
+                    {
+                        writer.WriteLine(lineToWrite);
+                    }
+                    else
+                    {
+                        writer.WriteLine(lines[currentLine - 1]);
+                    }
+                }
             }
         }
         #endregion
@@ -205,6 +292,7 @@ namespace FanpageTool
         }
         #endregion
 
+        #region Filter Comment
         private void FilterCommentBtn_Click(object sender, RoutedEventArgs e)
         {
             Excel.Application xlApp;
@@ -283,7 +371,7 @@ namespace FanpageTool
 
             Process.Start(configDirectory + "\\GiveAwayResult.xlsx");
         }
-
+        #endregion
 
     }
 }

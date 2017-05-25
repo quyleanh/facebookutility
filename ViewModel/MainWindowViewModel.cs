@@ -8,7 +8,26 @@ namespace FanpageTool.ViewModel
 {
     public class MainWindowViewModel :INotifyPropertyChanged
     {
-        private StringBuilder m_commandText = new StringBuilder();
+        private StringBuilder m_commandText = new StringBuilder("Fanpage Facebook Tool");
+        private bool m_isInit = false;
+
+        public MainWindowViewModel() 
+        {
+            IsInit = false;
+        }
+
+        public bool IsInit
+        {
+            get
+            {
+                return m_isInit;
+            }
+            set
+            {
+                m_isInit = value;
+                OnPropertyChanged("IsInit");
+            }
+        }
 
         public StringBuilder CommandText 
         {
