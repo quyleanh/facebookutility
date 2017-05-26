@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         Width="650"
-        Height="350"
+        Height="360"
         ResizeMode="NoResize"
         Title="FanpageTool">
    
@@ -117,7 +117,7 @@
                     </Style>
                 </TabControl.Resources>
                 <!--Tab Get Post-->
-                <TabItem Height="50" FlowDirection="LeftToRight">
+                <TabItem Height="40" FlowDirection="LeftToRight">
                     <TabItem.Header>
                         <TextBlock Text="Get Post"
                                    FontSize="16"/>
@@ -145,7 +145,7 @@
                                  VerticalContentAlignment="Center"
                                  HorizontalAlignment="Left"
                                  Margin="20,10"
-                                 x:Name="NumberPost"
+                                 x:Name="PageIdPost"
                                  MaxLength="4"
                                  Grid.Column="0" Grid.Row="0"
                                  PreviewTextInput="NumberValidationTextBox"
@@ -194,7 +194,7 @@
                                  VerticalContentAlignment="Center"
                                  HorizontalAlignment="Left"
                                  Margin="20,10"
-                                 x:Name="PageID"
+                                 x:Name="NumberOfPost"
                                  MaxLength="4"
                                  Grid.Column="0" Grid.Row="1"
                                  PreviewTextInput="NumberValidationTextBox"
@@ -244,7 +244,7 @@
                     </Grid>
                 </TabItem>
                 <!--Tab Get Comment-->
-                <TabItem Height="50">
+                <TabItem Height="40">
                     <TabItem.Header>
                         <TextBlock Text="Get Comment"  
                                    FontSize="16"/>
@@ -272,7 +272,7 @@
                                  VerticalContentAlignment="Center"
                                  HorizontalAlignment="Left"
                                  Margin="20,10"
-                                 x:Name="NumberPostComment"
+                                 x:Name="PageIdComment"
                                  MaxLength="4"
                                  Grid.Column="0" Grid.Row="0"
                                  PreviewTextInput="NumberValidationTextBox"
@@ -328,7 +328,7 @@
                                     <Style.Resources>
                                         <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                             <VisualBrush.Visual>
-                                                <TextBlock Text="167994586682731_762868747195309" Foreground="LightGray" />
+                                                <Label Content="167994586682731__762868747195309" Foreground="LightGray" />
                                             </VisualBrush.Visual>
                                         </VisualBrush>
                                     </Style.Resources>
@@ -368,7 +368,7 @@
                     </Grid>
                 </TabItem>
                 <!--Tab Filter Comment-->
-                <TabItem Height="50">
+                <TabItem Height="40">
                     <TabItem.Header>
                         <TextBlock Text="Filter Comment"
                                    FontSize="16"/>
@@ -396,7 +396,7 @@
                                  VerticalContentAlignment="Center"
                                  HorizontalAlignment="Left"
                                  Margin="20,10"
-                                 x:Name="NumberPostCommentFilter"
+                                 x:Name="PageIdCommentFilter"
                                  MaxLength="4"
                                  Grid.Column="0" Grid.Row="0"
                                  PreviewTextInput="NumberValidationTextBox"
@@ -488,6 +488,13 @@
                                 x:Name="FilterCommentBtn"
                                 Click="FilterCommentBtn_Click"/>
                     </Grid>
+                </TabItem>
+                <!--Tab About-->
+                <TabItem Height="40">
+                    <TabItem.Header>
+                        <TextBlock Text="About"
+                                   FontSize="16"/>
+                    </TabItem.Header>
                 </TabItem>
             </TabControl>
         </StackPanel>
